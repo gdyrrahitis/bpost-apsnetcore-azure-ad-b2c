@@ -1,1 +1,1 @@
-# bpost-apsnetcore-azure-ad-b2c
+# ASP.NET Core 2.0 Azure Active Directory B2C
