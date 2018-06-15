@@ -22,15 +22,6 @@
             return Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, Policies.SignIn);
         }
 
-        [Route("signout")]
-        public IActionResult SignOut(string returnUrl)
-        {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
-        }
-
-        public IActionResult Cancel() => RedirectToAction("Index", "Home");
-
         [HttpPost]
         [Route("signout")]
         [ValidateAntiForgeryToken]

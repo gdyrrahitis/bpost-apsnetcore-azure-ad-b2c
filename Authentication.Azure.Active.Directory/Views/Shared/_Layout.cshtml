@@ -19,6 +19,12 @@
 </head>
 <body>
     <div class="container body-content">
+        <div class="modal fade" id="SignOutModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                @Html.Partial("_SignOut")
+            </div>
+        </div>
+
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
@@ -39,8 +45,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li>
-                                <a asp-controller="Auth" asp-route-returnUrl="@Context.Request.GetEncodedPathAndQuery()"
-                                   asp-action="SignOut">Sign out</a>
+                                <a href="#" data-toggle="modal" data-target="#SignOutModal">Sign out</a>
                             </li>
 
                         }
