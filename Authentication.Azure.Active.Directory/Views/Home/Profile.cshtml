@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-md-12">
         <h2>User claims</h2>
-        <a class="btn btn-primary btn-lg" asp-action="Profile" asp-controller="Auth">Edit profile</a>
+        <a class="btn btn-primary btn-lg" asp-action="Profile" asp-controller="Auth" asp-route-returnUrl="@Url.Action("Profile", "Home")">Edit profile</a>
         <h3>@Model.Name</h3>
         @if (Model.Claims.Any())
         {

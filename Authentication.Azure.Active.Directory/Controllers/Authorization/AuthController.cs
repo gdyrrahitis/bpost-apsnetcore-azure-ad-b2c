@@ -45,9 +45,10 @@
         }
 
         [Route("profile")]
-        public IActionResult Profile()
+        public IActionResult Profile(string returnUrl)
         {
-            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, Policies.Profile);
+            var redirectUri = string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl;
+            return Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, Policies.Profile);
         }
     }
 }
