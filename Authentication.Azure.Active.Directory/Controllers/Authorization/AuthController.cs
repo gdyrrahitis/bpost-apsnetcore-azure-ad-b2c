@@ -15,14 +15,14 @@
             return Challenge(new AuthenticationProperties { RedirectUri = "/" }, Policies.SignUp);
         }
 
-        [Route("login")]
-        public IActionResult Login(string returnUrl)
+        [Route("signin")]
+        public IActionResult SignIn(string returnUrl)
         {
-            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, Policies.Login);
+            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, Policies.SignIn);
         }
 
-        [Route("logout")]
-        public IActionResult Logout(string returnUrl)
+        [Route("signout")]
+        public IActionResult SignOut(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
@@ -31,9 +31,9 @@
         public IActionResult Cancel() => RedirectToAction("Index", "Home");
 
         [HttpPost]
-        [Route("logout")]
+        [Route("signout")]
         [ValidateAntiForgeryToken]
-        public async Task Logout()
+        public async Task SignOut()
         {
             if (User.Identity.IsAuthenticated)
             {

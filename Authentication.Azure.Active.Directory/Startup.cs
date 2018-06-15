@@ -10,7 +10,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-    using System;
     using System.Threading.Tasks;
 
     public class Startup
@@ -22,27 +21,37 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            var events = new OpenIdConnectEvents
+            {
+                OnRemoteFailure = context =>
+                {
+                    // You might want to log the error
+                    context.Response.Redirect("/");
+                    context.HandleResponse();
+                    return Task.CompletedTask;
+                }
+            };
 
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = Policies.SignUpLogin;
+                options.DefaultChallengeScheme = Policies.SignUpIn;
             })
-            .AddOpenIdConnect(Policies.SignUp, options => SetupOpenIdConnectOptions(options, Policies.SignUp))
-            .AddOpenIdConnect(Policies.Login, options => SetupOpenIdConnectOptions(options, Policies.Login))
-            .AddOpenIdConnect(Policies.SignUpLogin, options => SetupOpenIdConnectOptions(options, Policies.SignUpLogin))
+            .AddOpenIdConnect(Policies.SignUp, options =>
+            {
+                options.Events = events;
+                SetupOpenIdConnectOptions(options, Policies.SignUp);
+            })
+            .AddOpenIdConnect(Policies.SignIn, options => SetupOpenIdConnectOptions(options, Policies.SignIn))
+            .AddOpenIdConnect(Policies.SignUpIn, options =>
+            {
+                options.Events = events;
+                SetupOpenIdConnectOptions(options, Policies.SignUpIn);
+            })
             .AddOpenIdConnect(Policies.Profile, options =>
             {
-                options.Events = new OpenIdConnectEvents
-                {
-                    OnRemoteFailure = context =>
-                    {
-                        context.Response.Redirect("/");
-                        context.HandleResponse();
-                        return Task.CompletedTask;
-                    }
-                };
+                options.Events = events;
                 SetupOpenIdConnectOptions(options, Policies.Profile);
             })
             .AddCookie();
@@ -50,11 +59,11 @@
 
         private void SetupOpenIdConnectOptions(OpenIdConnectOptions options, string policy)
         {
-            options.MetadataAddress =  $"https://login.microsoftonline.com/TENANT_ID.onmicrosoft.com/v2.0/.well-known/openid-configuration?p={policy}";
-            options.ClientId = "CLIENT_ID";
+            options.MetadataAddress = $"https://login.microsoftonline.com/<TENANT>.onmicrosoft.com/v2.0/.well-known/openid-configuration?p={policy}";
+            options.ClientId = "<CLIENT_ID>";
             options.ResponseType = OpenIdConnectResponseType.IdToken;
-            options.CallbackPath = $"/login/{policy}";
-            options.SignedOutCallbackPath = $"/logout/{policy}";
+            options.CallbackPath = $"/signin/{policy}";
+            options.SignedOutCallbackPath = $"/signout/{policy}";
             options.SignedOutRedirectUri = "/";
             options.TokenValidationParameters.NameClaimType = "name";
         }

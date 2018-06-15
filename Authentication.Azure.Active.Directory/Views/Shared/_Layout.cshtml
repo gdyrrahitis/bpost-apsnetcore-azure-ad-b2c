@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Authentication.Local</title>
+    <title>@ViewData["Title"] - Authentication.Azure.Active.Directory.B2C</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -40,14 +40,14 @@
                         {
                             <li>
                                 <a asp-controller="Auth" asp-route-returnUrl="@Context.Request.GetEncodedPathAndQuery()"
-                                   asp-action="Logout">Logout</a>
+                                   asp-action="SignOut">Sign out</a>
                             </li>
 
                         }
                         else
                         {
                             <li>
-                                <a asp-controller="Auth" asp-action="Login">Login</a>
+                                <a asp-controller="Auth" asp-action="SignIn">Sign in</a>
                             </li>
                             <li>
                                 <a asp-controller="Auth" asp-action="SignUp">Sign up</a>
