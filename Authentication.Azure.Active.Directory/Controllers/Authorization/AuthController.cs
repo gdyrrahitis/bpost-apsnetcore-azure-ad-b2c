@@ -18,7 +18,8 @@
         [Route("signin")]
         public IActionResult SignIn(string returnUrl)
         {
-            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, Policies.SignIn);
+            var redirectUri = string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl;
+            return Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, Policies.SignIn);
         }
 
         [Route("signout")]
